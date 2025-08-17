@@ -1,0 +1,12 @@
+requests
+httpx
+tenacity
+beautifulsoup4
+pandas
+polars
+python-dotenv
+loguru
+fastapi
+uvicorn
+plotly
+dash
