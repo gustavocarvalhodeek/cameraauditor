@@ -1,0 +1,82 @@
+chore(project): consolida estrutura inicial e configs (baseline v0.1)
+
+Contexto
+- Cria esqueleto do projeto CameraAuditor para auditoria de dados públicos da Câmara de Vereadores.
+- Define estrutura modular (scraper → ETL → dashboard) e artefatos auxiliares (.env, configs, ignorados).
+- Prepara dependências Python e formatação de código.
+
+Estrutura do projeto
+.
+├─ src/
+│  └─ camera_auditor/
+│     ├─ __init__.py
+│     ├─ scraper/
+│     │  └─ __init__.py
+│     ├─ etl/
+│     │  └─ __init__.py
+│     ├─ dashboard/
+│     │  └─ __init__.py
+│     └─ utils/
+│        └─ __init__.py
+├─ data/
+│  ├─ raw/          # dados brutos coletados do portal (HTML/CSV/JSON)
+│  └─ processed/    # dados tratados/normalizados prontos para análise
+├─ notebooks/       # exploração/POCs, estudos e protótipos
+├─ tests/           # futuros testes (pytest)
+├─ .env.example     # variáveis de ambiente de exemplo (BASE_URL, OUTPUT_DIR, LOG_LEVEL)
+├─ .gitignore       # Python/IDE/OS; evita sujeira no repositório
+├─ pyproject.toml   # Black/Ruff e metadados do projeto
+├─ requirements.txt # dependências Python
+└─ README.md        # documento inicial (a expandir com instruções de uso)
+
+Principais arquivos e conteúdos
+- requirements.txt:
+  - requests, httpx, beautifulsoup4 → camadas de coleta (HTTP + parsing)
+  - tenacity → retry/backoff robusto
+  - pandas, polars → transformação/ETL e análises
+  - python-dotenv → gestão de variáveis (.env)
+  - loguru → logging estruturado
+  - fastapi, uvicorn → futura API de exposição
+  - plotly, dash → dashboard interativo
+- pyproject.toml:
+  - project.name/version/description
+  - Black (line-length=100)
+  - Ruff (E,F,I,UP,B) para lint/imports/pyupgrade/boas práticas
+- .env.example:
+  - BASE_URL: URL base do portal de transparência alvo
+  - OUTPUT_DIR: diretório de saída (padrão: data/processed)
+  - LOG_LEVEL: nível de log (INFO/DEBUG, etc.)
+- .gitignore:
+  - cache Python, venv, arquivos temporários, pastas de IDE (VSCode/IntelliJ) e do SO
+
+Decisões de arquitetura (baseline)
+- src/camera_auditor/scraper: futura camada de coleta com session HTTP resiliente (httpx + tenacity), parsing (BS4), logs padronizados (loguru) e leitura de .env (dotenv).
+- src/camera_auditor/etl: limpeza/normalização, padronização de schemas, deduplicação e validações (pandas/polars).
+- src/camera_auditor/dashboard: endpoints/API (FastAPI) e/ou UI com Dash/Plotly para KPIs (despesas por vereador, fornecedor, função, período, outliers).
+- src/camera_auditor/utils: utilitários (I/O, datas, validações, formatação, log).
+
+Como rodar local (baseline)
+1) Python 3.10+
+2) Criar venv e instalar deps:
+   - Windows PowerShell:
+     python -m venv .venv
+     .\.venv\Scripts\Activate.ps1
+     pip install -r requirements.txt
+3) Criar .env a partir de .env.example e ajustar BASE_URL/OUTPUT_DIR/LOG_LEVEL.
+
+Estado atual
+- Pastas e __init__.py criados para módulos.
+- Arquivos de configuração preparados e prontos para evolução.
+- README inicial presente (ainda genérico; será expandido com instruções de uso, arquitetura e contribuições).
+
+Próximos passos sugeridos (não-breaker)
+- Implementar cliente HTTP resiliente (timeout, retries, user-agent, respeitar robots/ética).
+- Definir schema base (campos mínimos: data, empenho/liquidação/pagamento, órgão, função, favorecido, CNPJ, valor, fonte).
+- Pipeline ETL inicial (CSV/JSON para parquet), com validação e logs.
+- Esqueleto de API (FastAPI) e rascunho do dashboard (Dash/Plotly).
+- Configurar pre-commit (black, ruff) e CI (GitHub Actions) para lint/test.
+- Adicionar LICENSE e CONTRIBUTING.
+
+BREAKING CHANGES
+- N/A (baseline de estrutura e configs)
+
